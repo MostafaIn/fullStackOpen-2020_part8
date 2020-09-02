@@ -1,0 +1,16 @@
+{
+  "name": "backend-small_library",
+  "version": "1.0.0",
+  "description": "backend small_library",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mostafa Hazareh",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.17.0",
+    "graphql": "^15.3.0"
+  }
+}
