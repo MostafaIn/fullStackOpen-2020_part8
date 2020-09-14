@@ -9,7 +9,6 @@ const Books = (props) => {
   if (!props.show) {
     return null
   }
-console.log(result.data.allBooks)
   return (
     <div>
       <h2>books</h2>

@@ -2,7 +2,7 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_AUTHORS } from './queries'
-
+import SetBirthyear from './SetBirthyear'
 
 
 const Authors = (props) => {
@@ -39,9 +39,11 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-
+    <SetBirthyear setError={props.setError} />
     </div>
   )
 }
 
 export default Authors
+
+
