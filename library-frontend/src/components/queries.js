@@ -38,7 +38,9 @@ mutation createBook(
     ) {
       title
       published
-      author
+      author {
+        name
+      }
       genres
     }
 }
@@ -57,4 +59,18 @@ export const SET_BIRTHYEAR = gql `
         born
      }
     }
+`
+
+export const LOGIN = gql`
+  mutation login(
+    $username: String!
+    $password: String!
+    ){
+    login(
+      username: $username
+      password: $password
+      ){
+        value
+      }
+  }
 `
