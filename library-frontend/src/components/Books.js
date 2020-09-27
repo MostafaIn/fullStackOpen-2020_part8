@@ -1,5 +1,5 @@
 import React,{ useState, useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from './queries'
 
 
@@ -7,28 +7,28 @@ const Books = (props) => {
   const [genres, setGenres] = useState([])
   const [genre, setGenre] = useState("")
   const [booksData, setBooksData] = useState([])
-  const result = useQuery(ALL_BOOKS)
+  const [getBooks, result] = useLazyQuery(ALL_BOOKS)
 
   useEffect(() => {
+    getBooks({ variables: { byGenre: genre}})
+
     if(result.data){
       setBooksData(result.data.allBooks)
       const genresArr = result.data.allBooks.flatMap(b => b.genres)
-      setGenres([...new Set(genresArr), "All genres"])
+      genres.length < 1 && setGenres([...new Set(genresArr), "All genres"])
     }
-  }, [result])
-
-  const filteredByGenre = booksData.filter( book => (genre && genre !== "All genres") ? book.genres.includes(genre) : book)
+    if(genre === 'All genres') setGenre("")
+  }, [genre, genres.length, getBooks, result.data])
 
   if (!props.show) {
     return null
   } 
-  console.log(genre);
-  console.log(filteredByGenre);
+  console.log(genres);
+  console.log(result.data);
   
   return (
     <div>
       <h2>books</h2>
-
       <table>
         <tbody>
           <tr>
@@ -40,7 +40,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {filteredByGenre.map((a, i) =>
+          {booksData.map((a, i) =>
             <tr key={i}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
