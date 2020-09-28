@@ -9,7 +9,7 @@ const Recommend = ({show}) => {
 
     useEffect(() => {
       getBooks({ variables: { byGenre: myFavGenre}})
-      if(me.data){
+      if(me.data && me.data.me){
         setMyFavGenre(me.data.me.favoriteGenre)
       }
     }, [getBooks, me.data, myFavGenre])

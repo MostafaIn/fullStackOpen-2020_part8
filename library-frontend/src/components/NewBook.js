@@ -14,6 +14,21 @@ const NewBook = ({setError, show}) => {
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS }],
     onError: err => {
       err.networkError ? setError(err.message) : setError(err.graphQLErrors[0].message)
+    },
+    update: (store, response) => {
+      try {
+        const dataInStore = store.readQuery({ query: ALL_BOOKS, variables:{byGenre: response.data.addBook.genres[0]} })
+        store.writeQuery({
+          query: ALL_BOOKS,
+          variables:{byGenre: response.data.addBook.genres[0]},
+          data: {
+            ...dataInStore,
+            allBooks: [ ...dataInStore.allBooks, response.data.addBook ]
+          }
+        })
+      } catch (error) {
+        
+      }
     }
   })
   

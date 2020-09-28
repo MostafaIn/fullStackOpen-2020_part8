@@ -7,7 +7,9 @@ const Books = (props) => {
   const [genres, setGenres] = useState([])
   const [genre, setGenre] = useState("")
   const [booksData, setBooksData] = useState([])
-  const [getBooks, result] = useLazyQuery(ALL_BOOKS)
+  const [getBooks, result] = useLazyQuery(ALL_BOOKS,{
+    fetchPolicy: 'no-cache'
+  })
 
   useEffect(() => {
     getBooks({ variables: { byGenre: genre}})
@@ -15,16 +17,24 @@ const Books = (props) => {
     if(result.data){
       setBooksData(result.data.allBooks)
       const genresArr = result.data.allBooks.flatMap(b => b.genres)
-      genres.length < 1 && setGenres([...new Set(genresArr), "All genres"])
+      const newGenres = result.data.allBooks.map( b => b.genres).slice(-1)[0]
+      // console.log(newGenres)
+      if(genres.length < 1){
+        setGenres([...new Set(genresArr), "All genres"])
+      }else{
+        for(let genre of newGenres){
+            if(!genres.includes(genre)){
+              setGenres([genre, ...genres])
+            }
+        }
+      }
     }
     if(genre === 'All genres') setGenre("")
-  }, [genre, genres.length, getBooks, result.data])
+  }, [genre, genres, getBooks, result.data])
 
   if (!props.show) {
     return null
-  } 
-  console.log(genres);
-  console.log(result.data);
+  }
   
   return (
     <div>
