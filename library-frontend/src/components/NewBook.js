@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client'
 import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from './queries'
 
 
-const NewBook = ({setError, show}) => {
+const NewBook = ({setError, show, updateCacheWith}) => {
   const [title, setTitle] = useState("")
   const [author, setAuhtor] = useState("")
   const [published, setPublished] = useState("")
@@ -16,19 +16,7 @@ const NewBook = ({setError, show}) => {
       err.networkError ? setError(err.message) : setError(err.graphQLErrors[0].message)
     },
     update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({ query: ALL_BOOKS, variables:{byGenre: response.data.addBook.genres[0]} })
-        store.writeQuery({
-          query: ALL_BOOKS,
-          variables:{byGenre: response.data.addBook.genres[0]},
-          data: {
-            ...dataInStore,
-            allBooks: [ ...dataInStore.allBooks, response.data.addBook ]
-          }
-        })
-      } catch (error) {
-        
-      }
+      updateCacheWith(response.data.addBook)
     }
   })
   
